@@ -5,7 +5,7 @@ Specialist agents using Google Gemini (gemini-1.5-pro)
 import os
 from typing import List, Dict
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.schema import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from dotenv import load_dotenv
 
 load_dotenv()
