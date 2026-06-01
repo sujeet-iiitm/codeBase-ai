@@ -10,15 +10,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def qa_agent(query, chunks):
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
-        google_api_key=os.getenv("GOOGLE_API_KEY"),
-        temperature=0.2
-    )
-    # rest of code...
-
-
 def _format_context(chunks: List[Dict]) -> str:
     parts = []
     for c in chunks:
@@ -27,8 +18,12 @@ def _format_context(chunks: List[Dict]) -> str:
     return "\n\n".join(parts)
 
 
-def qa_agent(query: str, chunks: List[Dict]) -> str:
-    context = _format_context(chunks)
+def qa_agent(query, chunks):
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-2.5-flash",
+        google_api_key=os.getenv("GOOGLE_API_KEY"),
+        temperature=0.2
+    )
     messages = [
         SystemMessage(content="""You are a senior software engineer assistant.
 Answer the user's question using ONLY the provided codebase context.
