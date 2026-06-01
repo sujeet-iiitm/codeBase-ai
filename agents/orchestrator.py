@@ -21,8 +21,13 @@ from agents.specialist_agents import (
     onboarding_agent
 )
 
-router_llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=os.getenv("GOOGLE_API_KEY"), temperature=0)
-
+def router_node(state):
+    router_llm = ChatGoogleGenerativeAI(
+        model="gemini-2.5-flash",
+        google_api_key=os.getenv("GOOGLE_API_KEY"),
+        temperature=0
+    )
+    # rest of code...
 INTENT_OPTIONS = ["qa", "bug", "diagram", "docs", "impact", "onboarding"]
 
 
