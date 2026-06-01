@@ -1,6 +1,4 @@
-"""
-Specialist agents using Google Gemini (gemini-1.5-pro)
-"""
+"""Specialist agents using Google Gemini"""
 
 import os
 from typing import List, Dict
@@ -10,6 +8,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+def _get_llm():
+    return ChatGoogleGenerativeAI(
+        model="gemini-2.5-flash",
+        google_api_key=os.getenv("GOOGLE_API_KEY"),
+        temperature=0.2
+    )
+
 def _format_context(chunks: List[Dict]) -> str:
     parts = []
     for c in chunks:
@@ -18,12 +23,9 @@ def _format_context(chunks: List[Dict]) -> str:
     return "\n\n".join(parts)
 
 
-def qa_agent(query, chunks):
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
-        google_api_key=os.getenv("GOOGLE_API_KEY"),
-        temperature=0.2
-    )
+def qa_agent(query: str, chunks: List[Dict]) -> str:
+    llm = _get_llm()
+    context = _format_context(chunks)
     messages = [
         SystemMessage(content="""You are a senior software engineer assistant.
 Answer the user's question using ONLY the provided codebase context.
@@ -35,6 +37,7 @@ If the answer isn't in the context, say so clearly — do not hallucinate."""),
 
 
 def bug_agent(bug_description: str, chunks: List[Dict]) -> str:
+    llm = _get_llm()
     context = _format_context(chunks)
     messages = [
         SystemMessage(content="""You are an expert debugger and code analyst.
@@ -49,6 +52,7 @@ Given a bug description and relevant code context, identify:
 
 
 def diagram_agent(query: str, chunks: List[Dict], diagram_type: str = "architecture") -> Dict:
+    llm = _get_llm()
     context = _format_context(chunks)
     type_instructions = {
         "architecture": "Generate a Mermaid flowchart (graph TD) showing system components, relationships, and data flow.",
@@ -71,6 +75,7 @@ Output ONLY valid Mermaid diagram code — no markdown fences, no explanation, n
 
 
 def docs_agent(query: str, chunks: List[Dict]) -> str:
+    llm = _get_llm()
     context = _format_context(chunks)
     messages = [
         SystemMessage(content="""You are a technical documentation expert.
@@ -82,6 +87,7 @@ Generate clear, professional documentation in Markdown format including:
 
 
 def impact_agent(change_description: str, chunks: List[Dict]) -> str:
+    llm = _get_llm()
     context = _format_context(chunks)
     messages = [
         SystemMessage(content="""You are a senior software architect specialising in change impact analysis.
@@ -97,6 +103,7 @@ Analyse:
 
 
 def onboarding_agent(chunks: List[Dict], file_tree: List[str]) -> str:
+    llm = _get_llm()
     context = _format_context(chunks[:12])
     tree_text = "\n".join(file_tree[:60])
     messages = [
