@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from agents.specialist_agents import (
-    qa_agent, bug_agent, diagram_agent,
+    _get_llm, qa_agent, bug_agent, diagram_agent,
     docs_agent, impact_agent, onboarding_agent
 )
 
@@ -29,11 +29,7 @@ class AgentState(TypedDict):
 
 
 def router_node(state: AgentState) -> AgentState:
-    router_llm = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
-        google_api_key=os.getenv("GOOGLE_API_KEY"),
-        temperature=0
-    )
+    router_llm = _get_llm(temperature=0)
     query = state["query"]
     messages = [
         SystemMessage(content=f"""You are an intent classifier for a codebase assistant.

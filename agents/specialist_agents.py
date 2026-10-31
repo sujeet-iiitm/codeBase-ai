@@ -8,11 +8,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def _get_llm():
+def _get_llm(temperature=0.2):
     return ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
+        model=os.getenv("GEMINI_MODEL", "gemini-flash-latest"),
         google_api_key=os.getenv("GOOGLE_API_KEY"),
-        temperature=0.2
+        temperature=temperature
     )
 
 def _format_context(chunks: List[Dict]) -> str:
